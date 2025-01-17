@@ -42,20 +42,106 @@ A clean and responsive subscription form that captures user emails and sends the
 1. **Create a Google Sheet:**
    - Add column headers for your data (e.g., "Email").
 
-2. **Set Up Google Apps Script:**
-   - Open your Google Sheet, go to **Extensions > Apps Script**.
-   - Paste the following script:
-     ```javascript
-     function doPost(e) {
-       var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-       var data = JSON.parse(e.postData.contents);
-       sheet.appendRow([data.Email]);
-       return ContentService.createTextOutput(JSON.stringify({ "result": "success" })).setMimeType(ContentService.MimeType.JSON);
-     }
-     ```
-   - Save and deploy the script as a **web app**:
-     - **Execute As:** Me
-     - **Who Has Access:** Anyone
+2. ## Google Apps Script Code
+
+To integrate your form submissions with Google Sheets, use the following code in the Google Apps Script editor:
+
+```javascript
+var sheetName = 'Sheet1';
+var scriptProp = PropertiesService.getScriptProperties();
+
+function intialSetup() {
+  var activeSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  scriptProp.setProperty('key', activeSpreadsheet.getId());
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+
+  try {
+    var doc = SpreadsheetApp.openById(scriptProp.getProperty('key'));
+    var sheet = doc.getSheetByName(sheetName);
+
+    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    var nextRow = sheet.getLastRow() + 1;
+
+    var newRow = headers.map(function(header) {
+      return header === 'timestamp' ? new Date() : e.parameter[header];
+    });
+
+    sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (e) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+Here’s your Google Apps Script code formatted for easy addition to your README in a terminal-style block:
+
+markdown
+Copy
+Edit
+## Google Apps Script Code
+
+To integrate your form submissions with Google Sheets, use the following code in the Google Apps Script editor:
+
+```javascript
+var sheetName = 'Sheet1';
+var scriptProp = PropertiesService.getScriptProperties();
+
+function intialSetup() {
+  var activeSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  scriptProp.setProperty('key', activeSpreadsheet.getId());
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+
+  try {
+    var doc = SpreadsheetApp.openById(scriptProp.getProperty('key'));
+    var sheet = doc.getSheetByName(sheetName);
+
+    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    var nextRow = sheet.getLastRow() + 1;
+
+    var newRow = headers.map(function(header) {
+      return header === 'timestamp' ? new Date() : e.parameter[header];
+    });
+
+    sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (e) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+Steps to Use:
+Open your Google Sheet.
+Go to Extensions > Apps Script.
+Replace any existing code with the script above.
+Run the intialSetup function to link the script to your spreadsheet.
+Deploy the script as a web app:
+Deploy > New Deployment.
+Select Web App.
+Set Execute As: Me.
+Set Who Has Access: Anyone.
+Deploy and copy the Web App URL.
+Replace Your_Add_URL in your JavaScript form handler with the Web App URL. ```
 
 3. **Copy the Script URL:**
    - Replace `"Your_Add_URL"` in `script.js` with your script’s deployment URL.
