@@ -19,138 +19,101 @@ A clean and responsive subscription form that captures user emails and sends the
 - ✨ **JavaScript:** Handles form submissions and integrates with Google Sheets.
 - 🌐 **Google Apps Script:** Captures and logs form submissions in Google Sheets.
 
+
 ---
 
 ## How to Use
+
 1. **Subscribe to Updates:**
    - Enter your email address in the input field.
-   - Click the **Send Icon** button to submit your email.
+   - Click the **Submit** button to send your subscription.
 
 2. **View Confirmation:**
-   - A message saying "Thank You For Subscribing!" will appear upon successful submission.
-   - The message will disappear automatically after 5 seconds.
+   - A message saying "Thank You For Subscribing!" will appear for 5 seconds.
+   - The form will automatically reset after submission.
 
 3. **Google Sheet Integration:**
-   - The submitted email will be saved directly to the linked Google Sheet.
-
-4. **Responsive Design:**
-   - The form is designed to work seamlessly on all devices, from desktops to smartphones.
+   - Submissions are logged in real time to a connected Google Sheet.
 
 ---
 
 ## Setting Up Google Sheet Integration
-1. **Create a Google Sheet:**
-   - Add column headers for your data (e.g., "Email").
 
-2. ## Google Apps Script Code
-
-To integrate your form submissions with Google Sheets, use the following code in the Google Apps Script editor:
-
-```javascript
-var sheetName = 'Sheet1';
-var scriptProp = PropertiesService.getScriptProperties();
-
-function intialSetup() {
-  var activeSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  scriptProp.setProperty('key', activeSpreadsheet.getId());
-}
-
-function doPost(e) {
-  var lock = LockService.getScriptLock();
-  lock.tryLock(10000);
-
-  try {
-    var doc = SpreadsheetApp.openById(scriptProp.getProperty('key'));
-    var sheet = doc.getSheetByName(sheetName);
-
-    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    var nextRow = sheet.getLastRow() + 1;
-
-    var newRow = headers.map(function(header) {
-      return header === 'timestamp' ? new Date() : e.parameter[header];
-    });
-
-    sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (e) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-Here’s your Google Apps Script code formatted for easy addition to your README in a terminal-style block:
-
-markdown
-Copy
-Edit
-## Google Apps Script Code
-
-To integrate your form submissions with Google Sheets, use the following code in the Google Apps Script editor:
-
-```javascript
-var sheetName = 'Sheet1';
-var scriptProp = PropertiesService.getScriptProperties();
-
-function intialSetup() {
-  var activeSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  scriptProp.setProperty('key', activeSpreadsheet.getId());
-}
-
-function doPost(e) {
-  var lock = LockService.getScriptLock();
-  lock.tryLock(10000);
-
-  try {
-    var doc = SpreadsheetApp.openById(scriptProp.getProperty('key'));
-    var sheet = doc.getSheetByName(sheetName);
-
-    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    var nextRow = sheet.getLastRow() + 1;
-
-    var newRow = headers.map(function(header) {
-      return header === 'timestamp' ? new Date() : e.parameter[header];
-    });
-
-    sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (e) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } finally {
-    lock.releaseLock();
-  }
-}
-Steps to Use:
-Open your Google Sheet.
-Go to Extensions > Apps Script.
-Replace any existing code with the script above.
-Run the intialSetup function to link the script to your spreadsheet.
-Deploy the script as a web app:
-Deploy > New Deployment.
-Select Web App.
-Set Execute As: Me.
-Set Who Has Access: Anyone.
-Deploy and copy the Web App URL.
-Replace Your_Add_URL in your JavaScript form handler with the Web App URL. ```
-
-3. **Copy the Script URL:**
-   - Replace `"Your_Add_URL"` in `script.js` with your script’s deployment URL.
-
-4. **Test the Form:**
-   - Open the form in a browser, enter an email, and click submit. Verify the data appears in your Google Sheet.
+### Step 1: Create a Google Sheet
+1. Open [Google Sheets](https://sheets.google.com) and create a new spreadsheet.
+2. Name the first sheet `Sheet1` (or modify the script to match your sheet name).
+3. Add headers in the first row (e.g., `Email`, `timestamp`).
 
 ---
 
-## Demo
+### Step 2: Set Up Google Apps Script
+1. In your Google Sheet, go to **Extensions > Apps Script**.
+2. Paste the following code into the editor:
 
+```javascript
+var sheetName = 'Sheet1';
+var scriptProp = PropertiesService.getScriptProperties();
+
+function intialSetup() {
+  var activeSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  scriptProp.setProperty('key', activeSpreadsheet.getId());
+}
+
+function doPost(e) {
+  var lock = LockService.getScriptLock();
+  lock.tryLock(10000);
+
+  try {
+    var doc = SpreadsheetApp.openById(scriptProp.getProperty('key'));
+    var sheet = doc.getSheetByName(sheetName);
+
+    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    var nextRow = sheet.getLastRow() + 1;
+
+    var newRow = headers.map(function(header) {
+      return header === 'timestamp' ? new Date() : e.parameter[header];
+    });
+
+    sheet.getRange(nextRow, 1, 1, newRow.length).setValues([newRow]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ 'result': 'success', 'row': nextRow }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (e) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ 'result': 'error', 'error': e }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+Step 3: Run Initial Setup
+In the Apps Script editor, select the intialSetup function from the dropdown menu and click Run.
+Grant any necessary permissions.
+Step 4: Deploy as a Web App
+Click Deploy > New Deployment.
+Select Web App as the deployment type.
+Set the following:
+Execute As: Me
+Who Has Access: Anyone
+Deploy and copy the Web App URL.
+Step 5: Integrate the Web App with Your Form
+Replace Your_Add_URL in the following JavaScript with your Web App URL:
+javascript
+
+const scriptURL = 'Your_Add_URL'; // Replace with your Web App URL
+const form = document.forms['submit-to-google-sheet'];
+const msg = document.getElementById("msg");
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+    .then(response => {
+      msg.innerHTML = "Thank You For Subscribing!";
+      setTimeout(() => { msg.innerHTML = ""; }, 5000);
+      form.reset();
+    })
+    .catch(error => console.error('Error!', error.message));
+});
 
