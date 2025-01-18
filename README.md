@@ -89,17 +89,22 @@ function doPost(e) {
 }
 
 ```
-Step 3: Run Initial Setup
+### Step 3: Run Initial Setup
+
 In the Apps Script editor, select the intialSetup function from the dropdown menu and click Run.
 Grant any necessary permissions.
-Step 4: Deploy as a Web App
+
+### Step 4: Deploy as a Web App
+
 Click Deploy > New Deployment.
 Select Web App as the deployment type.
 Set the following:
 Execute As: Me
 Who Has Access: Anyone
 Deploy and copy the Web App URL.
-Step 5: Integrate the Web App with Your Form
+
+### Step 5: Integrate the Web App with Your Form
+
 Replace Your_Add_URL in the following JavaScript with your Web App URL:
 javascript
 
@@ -119,3 +124,5 @@ form.addEventListener('submit', e => {
 });
 
 ## Demo
+
+https://github.com/user-attachments/assets/e24aac64-26fc-45c0-af9f-163653f57f45
