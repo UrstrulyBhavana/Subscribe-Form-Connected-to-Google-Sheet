@@ -106,7 +106,8 @@ Deploy and copy the Web App URL.
 ### Step 5: Integrate the Web App with Your Form
 
 Replace Your_Add_URL in the following JavaScript with your Web App URL:
-javascript
+
+```javascript
 
 const scriptURL = 'Your_Add_URL'; // Replace with your Web App URL
 const form = document.forms['submit-to-google-sheet'];
@@ -122,6 +123,7 @@ form.addEventListener('submit', e => {
     })
     .catch(error => console.error('Error!', error.message));
 });
+```
 
 ## Demo
 
