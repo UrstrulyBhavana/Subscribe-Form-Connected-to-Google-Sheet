@@ -88,6 +88,7 @@ function doPost(e) {
   }
 }
 
+```
 Step 3: Run Initial Setup
 In the Apps Script editor, select the intialSetup function from the dropdown menu and click Run.
 Grant any necessary permissions.
@@ -117,3 +118,4 @@ form.addEventListener('submit', e => {
     .catch(error => console.error('Error!', error.message));
 });
 
+## Demo
