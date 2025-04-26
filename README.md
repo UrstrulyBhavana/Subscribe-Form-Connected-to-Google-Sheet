@@ -1,5 +1,13 @@
 # 📧 Subscribe Form to Google Sheet
 
+---
+
+## Demo
+
+https://github.com/user-attachments/assets/e24aac64-26fc-45c0-af9f-163653f57f45
+
+---
+
 A clean and responsive subscription form that captures user emails and sends them directly to a Google Sheet. This is a great tool for collecting subscriber information for upcoming events, announcements, or newsletters.
 
 ---
@@ -125,6 +133,26 @@ form.addEventListener('submit', e => {
 });
 ```
 
-## Demo
+---
 
-https://github.com/user-attachments/assets/e24aac64-26fc-45c0-af9f-163653f57f45
+🙋‍♀️ Author
+Linga Bhavana – Frontend Developer
+
+GitHub | urstrulybhavana1432@gmail.com
+
+---
+
+
+📬 **Contact**
+
+For questions or suggestions, feel free to reach out:
+
+- 📧 **Email**: [urstrulybhavana1432@gmail.com](mailto:urstrulybhavana1432@gmail.com)  
+- 🐙 **GitHub**: [UrstrulyBhavana](https://github.com/UrstrulyBhavana)
+
+
+---
+
+📜 License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.
